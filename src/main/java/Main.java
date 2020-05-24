@@ -25,7 +25,7 @@ public class Main extends PApplet {
     HashSet<PVector> positions = new HashSet<>();
 
     int renderDistance = 1600;
-    float offSetStep = 0.002f;
+    float offsetStep = 0.002f;
 
     public void setup(){
         Rectangle.p = this;
@@ -34,6 +34,9 @@ public class Main extends PApplet {
         textSize(20);
     }
 
+    /**
+     * Main loop
+     */
     public void draw(){
         background(255);
         centerPosition.set(-cameraPosition.x+width/2f, -cameraPosition.y+height/2f);
@@ -72,6 +75,11 @@ public class Main extends PApplet {
         return value1;
     }
 
+    /**
+     *
+     * @param area - width of area to cover around point
+     * @param centerPosition - center point of generated map
+     */
     public void generate(float area, PVector centerPosition){
 
         float rowsOfRectanglesToConsider = (area / Rectangle.SIZE)*2;
@@ -79,15 +87,16 @@ public class Main extends PApplet {
             for (int row = 0; row < rowsOfRectanglesToConsider; row++) {
 
                 PVector pos = new PVector();
-                pos.x = round(centerPosition.x - (rowsOfRectanglesToConsider/2)*Rectangle.SIZE + col*Rectangle.SIZE, Rectangle.SIZE);
-                pos.y = round(centerPosition.y - (rowsOfRectanglesToConsider/2)*Rectangle.SIZE + row*Rectangle.SIZE, Rectangle.SIZE);
-
+                float centerXValue = centerPosition.x - (rowsOfRectanglesToConsider / 2) * Rectangle.SIZE + col * Rectangle.SIZE;
+                pos.x = round(centerXValue, Rectangle.SIZE);
+                float centerYValue = centerPosition.y - (rowsOfRectanglesToConsider / 2) * Rectangle.SIZE + row * Rectangle.SIZE;
+                pos.y = round(centerYValue, Rectangle.SIZE);
 
                 if(pos.dist(centerPosition)<area) {
 
                     if(!positions.contains(pos)){
-                        float perlinX = pos.x * offSetStep;
-                        float perlinY = pos.y * offSetStep;
+                        float perlinX = pos.x * offsetStep;
+                        float perlinY = pos.y * offsetStep;
                         float noise = noise(perlinX, perlinY);
                         Rectangle rectangle = new Rectangle(pos, noise);
                         rectangle.noiseValue = noise;
